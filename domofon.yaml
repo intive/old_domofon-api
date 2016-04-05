@@ -1,0 +1,190 @@
+swagger: '2.0'
+info:
+  version: 0.1.0
+  title: Domofon
+  description: Application developed as part of BLStream Hackaton
+host: domofon-api.blstream.net
+basePath: /v1
+schemes:
+  - http
+  - https
+consumes:
+  - application/json
+produces:
+  - application/json
+paths:
+  /contacts:
+    get:
+      description: Returns list of Contact entries
+      parameters:
+        - name: archive
+          in: query
+          description: Return Contact objects which are archived
+          type: boolean
+          default: false
+          required: false
+      responses:
+        200:
+          description: Return list of Contact entries
+          schema:
+            $ref: '#/definitions/ContactResponse'
+
+    post:
+      description: Allow creation of new Contact entry
+      responses:
+        200:
+          description: List all active contacts
+      parameters:
+       - name: contact
+         in: body
+         description: Contact to add
+         required: true
+         schema:
+          $ref: '#/definitions/ContactRequest'
+
+#  /contacts/sse:
+#    get:
+#      produces: ["text/event-stream"]
+#      responses:
+#        default:
+#          description: Streaming events representing changes to Contacts
+#          schema:
+#            type: object
+#            x-events:
+#              added:
+#                type: object
+#                properties:
+#                  message:
+#                    type: string
+#                  createdAt:
+#                    type: string
+#                    format: date-time
+
+  /contacts/{id}:
+    get:
+      parameters:
+        - name: id
+          in: path
+          type: string
+          description: ID of the contact to retrieve
+          required: true
+      responses:
+        200:
+          description: Contact
+        404:
+          description: Unable to find notification with such ID
+    delete:
+      parameters:
+      - name: id
+        in: path
+        type: string
+        description: ID of the contact to retrieve
+        required: true
+      responses:
+        200:
+          description: Contact removed
+        404:
+          description: Unable to find notification with such ID
+
+
+  /contacts/{id}/notify:
+    post:
+      parameters:
+        - name: id
+          in: path
+          type: string
+          description: ID of the contact to trigger notification for
+          required: true
+      responses:
+        200:
+          description: Notification was sent
+        404:
+          description: Unable to find notification with such ID
+
+  /contacts/{id}/message:
+    put:
+      parameters:
+        - name: id
+          in: path
+          type: string
+          description: ID of the contact to trigger notification for
+          required: true
+      responses:
+        200:
+          description: Message was altered
+        404:
+          description: Unable to find notification with such ID
+
+  /contacts/{id}/important:
+    put:
+      parameters:
+        - name: id
+          in: path
+          type: string
+          description: ID of the contact to trigger notification for
+          required: true
+      responses:
+        200:
+          description: Message importance status was changed
+        404:
+          description: Unable to find notification with such ID
+
+  /contacts/{id}/deputy:
+    put:
+      parameters:
+        - name: id
+          in: path
+          type: string
+          description: ID of the contact to trigger notification for
+          required: true
+        - name: deputy
+          in: body
+          schema:
+            $ref: '#/definitions/Notifee'
+
+      responses:
+        200:
+          description: Message importance status was changed
+        404:
+          description: Unable to find notification with such ID
+
+definitions:
+  Notifee:
+    type: object
+    properties:
+      name:
+        type: string
+      company:
+        type: string
+      notifyEmail:
+        type: string
+
+  ContactRequest:
+    allOf:
+      - $ref: '#/definitions/Notifee'
+      - type: object
+        required:
+         - name
+         - notifyEmail
+         - phone
+        properties:
+          adminEmail:
+            type: string
+          from:
+            type: string
+            format: date
+          tillDate:
+            type: string
+            format: date
+
+  ContactResponse:
+    allOf:
+      - $ref: '#/definitions/ContactRequest'
+      - type: object
+        properties:
+          isImportant:
+            type: boolean
+          message:
+            type: string
+          deputy:
+            $ref: '#/definitions/Notifee'
