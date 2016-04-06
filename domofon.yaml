@@ -1,7 +1,7 @@
 swagger: '2.0'
 info:
   version: 0.2.0
-  title: Domofon Server
+  title: Domofon API
   description: Application developed as part of CodeSpace #1
 host: domofon-api.blstream.net
 basePath: /v1
@@ -66,6 +66,7 @@ paths:
   /contacts/sse:
     get:
       produces: ["text/event-stream"]
+      summary: Streaming information about changes to Contacts list
       description: Streaming events representing changes to Contacts, after event was received it might be need to reload list of Contacts
       responses:
         200:
@@ -79,6 +80,7 @@ paths:
 
   /contacts/{id}:
     get:
+      summary: Retrieve details of Contact
       parameters:
         - name: id
           in: path
@@ -100,6 +102,7 @@ paths:
           schema:
             $ref: '#/definitions/Error'
     delete:
+      summary: Remove Contact entity
       parameters:
       - name: id
         in: path
@@ -128,6 +131,7 @@ paths:
 
   /contacts/{id}/notify:
     post:
+      summary: Send notifications to defined email and phone
       parameters:
         - name: id
           in: path
@@ -155,9 +159,9 @@ paths:
 
   /contacts/{id}/message:
     put:
-      summary: Allows changing notification message which will be used for notification
+      summary: Change notification message which will be included in email
       description: "It can contain few placeholders which will be expanded before sending:
-      {id}, {name}, {phone}, {company}, {isimportant}, {secret}
+      TODO: put placeholders here
       "
       parameters:
         - name: id
@@ -187,6 +191,7 @@ paths:
 
   /contacts/{id}/important:
     put:
+      summary: Change importance of the message
       parameters:
         - name: id
           in: path
@@ -194,6 +199,10 @@ paths:
           format: uuid
           description: ID of the Contact to change importance
           required: true
+        - name: isimportant
+          in: body
+          type: boolean
+          description: Should Contact be marked as important
       responses:
         200:
           description: Message importance status was changed
@@ -214,6 +223,7 @@ paths:
 
   /contacts/{id}/deputy:
     put:
+      summary: Change deputy for Contact
       parameters:
         - name: id
           in: path
@@ -239,7 +249,8 @@ paths:
           description: Unable to find Contact entity
           schema:
             type: string
-    delete:      
+    delete:
+      summary: Remove deputy
       parameters:
         - name: id
           in: path
