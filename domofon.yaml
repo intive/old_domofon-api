@@ -12,14 +12,16 @@ consumes:
   - application/json
 produces:
   - application/json
+  - text/plain
 paths:
   /contacts:
     get:
-      description: Returns list of Contact entries
+      summary: Returns list of Contact entries
+      description: Returned data is JSON array with entries of ContactResponse
       parameters:
         - name: archive
           in: query
-          description: Return Contact objects which are archived
+          description: Should return Contact objects which are archived
           type: boolean
           default: false
           required: false
@@ -27,13 +29,31 @@ paths:
         200:
           description: Return list of Contact entries
           schema:
-            $ref: '#/definitions/ContactResponse'
+            type: array
+            items:
+              $ref: '#/definitions/ContactResponse'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'              
 
     post:
-      description: Allow creation of new Contact entry
+      summary: Allow creation of new Contact entry
+      description: "We are aware it should be client-side generated PUT, but for simplicity of implementation we decided to keep POST. Returned String is ID of created event as UUID."
       responses:
         200:
-          description: List all active contacts
+          description: Contact was created
+          examples: 
+            text/plain: "d41b57fb-30a4-44b8-99e2-9cb9f9058838"
+            application/json: 
+              id: "d41b57fb-30a4-44b8-99e2-9cb9f9058838"
+          schema:
+            type: string
+            format: uuid
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
       parameters:
        - name: contact
          in: body
@@ -42,23 +62,20 @@ paths:
          schema:
           $ref: '#/definitions/ContactRequest'
 
-#  /contacts/sse:
-#    get:
-#      produces: ["text/event-stream"]
-#      responses:
-#        default:
-#          description: Streaming events representing changes to Contacts
-#          schema:
-#            type: object
-#            x-events:
-#              added:
-#                type: object
-#                properties:
-#                  message:
-#                    type: string
-#                  createdAt:
-#                    type: string
-#                    format: date-time
+            
+  /contacts/sse:
+    get:
+      produces: ["text/event-stream"]
+      description: Streaming events representing changes to Contacts, after event was received it might be need to reload list of Contacts
+      responses:
+        200:
+          description: Server-Sent Events stream
+          schema:
+            $ref: '#/definitions/SSEvent'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
 
   /contacts/{id}:
     get:
@@ -66,25 +83,47 @@ paths:
         - name: id
           in: path
           type: string
+          format: uuid
           description: ID of the contact to retrieve
           required: true
       responses:
         200:
-          description: Contact
+          description: Contact was found and could be returned
+          schema:
+            $ref: '#/definitions/ContactResponse'
         404:
-          description: Unable to find notification with such ID
+          description: Unable to find Contact entity
+          schema:
+            type: string
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
     delete:
       parameters:
       - name: id
         in: path
         type: string
+        format: uuid
         description: ID of the contact to remove
         required: true
       responses:
         200:
           description: Contact removed
+          schema:
+            type: string
+          examples:
+            text/plain: OK
+            application/json:
+              status: OK            
         404:
-          description: Unable to find notification with such ID
+          description: Unable to find Contact entity
+          schema:
+            type: string
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'          
 
 
   /contacts/{id}/notify:
@@ -93,27 +132,58 @@ paths:
         - name: id
           in: path
           type: string
+          format: uuid          
           description: ID of the contact to trigger notification for
           required: true
       responses:
         200:
           description: Notification was sent
+          schema:
+            type: string
+          examples:
+            text/plain: OK
+            application/json:
+              status: OK            
         404:
-          description: Unable to find notification with such ID
+          description: Unable to find Contact entity
+          schema:
+            type: string
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'          
 
   /contacts/{id}/message:
     put:
+      summary: Allows changing notification message which will be used for notification
+      description: "It can contain few placeholders which will be expanded before sending:
+      {id}, {name}, {phone}, {company}, {isimportant}, {secret}
+      "
       parameters:
         - name: id
           in: path
           type: string
+          format: uuid
           description: ID of the contact to change custom notification message
           required: true
       responses:
         200:
           description: Message was altered
+          schema:
+            type: string
+          examples:
+            text/plain: OK
+            application/json:
+              status: OK            
         404:
-          description: Unable to find notification with such ID
+          description: Unable to find Contact entity
+          schema:
+            type: string
+            
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'          
 
   /contacts/{id}/important:
     put:
@@ -121,13 +191,26 @@ paths:
         - name: id
           in: path
           type: string
+          format: uuid
           description: ID of the Contact to change importance
           required: true
       responses:
         200:
           description: Message importance status was changed
+          schema:
+            type: string
+          examples:
+            text/plain: OK
+            application/json:
+              status: OK            
         404:
-          description: Unable to find Contact with such ID
+          description: Unable to find Contact entity
+          schema:
+            type: string
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'          
 
   /contacts/{id}/deputy:
     put:
@@ -135,6 +218,7 @@ paths:
         - name: id
           in: path
           type: string
+          format: uuid          
           description: ID of the contact to set custom Deputy
           required: true
         - name: deputy
@@ -145,18 +229,42 @@ paths:
       responses:
         200:
           description: Deputy was changed
+          schema:
+            type: string
+          examples:
+            text/plain: OK
+            application/json:
+              status: OK            
         404:
-          description: Unable to find Contact with such ID
+          description: Unable to find Contact entity
+          schema:
+            type: string
     delete:      
       parameters:
         - name: id
           in: path
           type: string
+          format: uuid          
           description: ID of the Contact to remove custom Deputy
           required: true
       responses:
         200:
           description: Deputy was removed
+          schema:
+            type: string
+          examples:
+            text/plain: OK
+            application/json:
+              status: OK
+        404:
+          description: Unable to find Contact entity
+          schema:
+            type: string
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'          
+
 
 definitions:
   Notifee:
@@ -176,27 +284,77 @@ definitions:
         type: string
 
   ContactRequest:
-    allOf:
-      - $ref: '#/definitions/Notifee'
-      - type: object
-        properties:
-          adminEmail:
-            type: string
-          fromDate:
-            type: string
-            format: date
-          tillDate:
-            type: string
-            format: date
+    type: object   
+    required:
+      - name
+      - notifyEmail
+      - phone
+    properties:
+      name:
+        type: string
+      company:
+        type: string
+      notifyEmail:
+        type: string
+      phone:
+        type: string
+      adminEmail:
+        type: string
+      fromDate:
+        type: string
+        format: date
+      tillDate:
+        type: string
+        format: date
 
   ContactResponse:
-    allOf:
-      - $ref: '#/definitions/ContactRequest'
-      - type: object
-        properties:
-          isImportant:
-            type: boolean
-          message:
-            type: string
-          deputy:
-            $ref: '#/definitions/Notifee'
+    type: object
+    required:
+      - id
+      - name
+      - notifyEmail
+      - phone
+      - adminEmail
+      - isImportant
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+      company:
+        type: string
+      notifyEmail:
+        type: string
+      phone:
+        type: string
+      adminEmail:
+        type: string
+      fromDate:
+        type: string
+        format: date
+      tillDate:
+        type: string
+        format: date        
+      isImportant:
+        type: boolean
+      message:
+        type: string
+      deputy:
+        $ref: '#/definitions/Notifee'
+        
+  SSEvent:
+    type: object
+    properties:
+      updatedAt:
+        type: string
+        format: date-time
+  Error:
+    type: object
+    properties:
+      code:
+        type: integer
+        format: int32
+      message:
+        type: string
+      fields:
+        type: string        
