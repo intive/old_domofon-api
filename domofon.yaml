@@ -78,7 +78,7 @@ paths:
       - name: id
         in: path
         type: string
-        description: ID of the contact to retrieve
+        description: ID of the contact to remove
         required: true
       responses:
         200:
@@ -107,7 +107,7 @@ paths:
         - name: id
           in: path
           type: string
-          description: ID of the contact to trigger notification for
+          description: ID of the contact to change custom notification message
           required: true
       responses:
         200:
@@ -121,13 +121,13 @@ paths:
         - name: id
           in: path
           type: string
-          description: ID of the contact to trigger notification for
+          description: ID of the Contact to change importance
           required: true
       responses:
         200:
           description: Message importance status was changed
         404:
-          description: Unable to find notification with such ID
+          description: Unable to find Contact with such ID
 
   /contacts/{id}/deputy:
     put:
@@ -135,7 +135,7 @@ paths:
         - name: id
           in: path
           type: string
-          description: ID of the contact to trigger notification for
+          description: ID of the contact to set custom Deputy
           required: true
         - name: deputy
           in: body
@@ -144,13 +144,27 @@ paths:
 
       responses:
         200:
-          description: Message importance status was changed
+          description: Deputy was changed
         404:
-          description: Unable to find notification with such ID
+          description: Unable to find Contact with such ID
+    delete:      
+      parameters:
+        - name: id
+          in: path
+          type: string
+          description: ID of the Contact to remove custom Deputy
+          required: true
+      responses:
+        200:
+          description: Deputy was removed
 
 definitions:
   Notifee:
     type: object
+    required:
+      - name
+      - notifyEmail
+      - phone
     properties:
       name:
         type: string
@@ -158,19 +172,17 @@ definitions:
         type: string
       notifyEmail:
         type: string
+      phone:
+        type: string
 
   ContactRequest:
     allOf:
       - $ref: '#/definitions/Notifee'
       - type: object
-        required:
-         - name
-         - notifyEmail
-         - phone
         properties:
           adminEmail:
             type: string
-          from:
+          fromDate:
             type: string
             format: date
           tillDate:
