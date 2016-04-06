@@ -1,8 +1,8 @@
 swagger: '2.0'
 info:
-  version: 0.1.0
-  title: Domofon
-  description: Application developed as part of BLStream Hackaton
+  version: 0.2.0
+  title: Domofon Server
+  description: Application developed as part of CodeSpace #1
 host: domofon-api.blstream.net
 basePath: /v1
 schemes:
