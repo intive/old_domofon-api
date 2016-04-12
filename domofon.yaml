@@ -211,7 +211,10 @@ paths:
         in: body
         description: Should Contact be marked as important
         schema: 
-          type: boolean
+          type: object
+          properties:
+            isImportant:
+              type: boolean  
       responses:
         200:
           description: Message importance status was changed
