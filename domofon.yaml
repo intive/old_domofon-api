@@ -50,6 +50,14 @@ paths:
           schema:
             type: string
             format: uuid
+        422: 
+          description: Required fields were missing or invalid
+          examples:
+            application/json:
+              message: MissingFields
+              fields: ['name', 'notifyEmail', 'phone']
+          schema:
+            $ref: '#/definitions/Error'
         default:
           description: Unexpected error
           schema:
@@ -193,16 +201,17 @@ paths:
     put:
       summary: Change importance of the message
       parameters:
-        - name: id
-          in: path
-          type: string
-          format: uuid
-          description: ID of the Contact to change importance
-          required: true
-        - name: isimportant
-          in: body
+      - name: id
+        in: path
+        type: string
+        format: uuid
+        description: ID of the Contact to change importance
+        required: true
+      - name: isimportant
+        in: body
+        description: Should Contact be marked as important
+        schema: 
           type: boolean
-          description: Should Contact be marked as important
       responses:
         200:
           description: Message importance status was changed
