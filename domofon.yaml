@@ -215,6 +215,7 @@ paths:
           properties:
             isImportant:
               type: boolean  
+        required: true
       responses:
         200:
           description: Message importance status was changed
