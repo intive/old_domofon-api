@@ -1,0 +1,6 @@
+language: generic
+
+before_script:
+  - npm install -g swagger-cli
+script:
+  - swagger validate domofon.yaml
