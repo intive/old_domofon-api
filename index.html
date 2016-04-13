@@ -32,7 +32,16 @@
 
   <script type="text/javascript">
     $(function () {
+
       var url = 'domofon.yaml';
+
+      var hash = window.location.hash;
+      var identifier = "swagger="
+      var swaggerUrlPos = hash.indexOf(identifier);
+      if(swaggerUrlPos >= 0)
+      {
+        url = hash.substring(swaggerUrlPos+identifier.length)
+      }
 
       // Pre load translate...
       if(window.SwaggerTranslator) {
