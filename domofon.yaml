@@ -3,8 +3,7 @@ info:
   version: 0.2.0
   title: Domofon API
   description: Application developed as part of CodeSpace #1
-host: domofon-api.blstream.net
-basePath: /v1
+basePath: / # there should be version here, but for simplicity lets skip it
 schemes:
   - http
   - https
@@ -14,6 +13,20 @@ produces:
   - application/json
   - text/plain
 paths:
+  /domofon.yaml:
+    get:
+      produces:
+        - text/plain; charset=utf-8
+      summary: Retrieved Swagger API specification
+      responses:
+        200:
+          description: YAML describing API
+          schema:
+            type: string
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
   /contacts:
     get:
       summary: Returns list of Contact entries
@@ -199,7 +212,7 @@ paths:
 
   /contacts/{id}/important:
     put:
-      summary: Change importance of the message
+      summary: Change importance of the contact
       parameters:
       - name: id
         in: path
@@ -211,10 +224,7 @@ paths:
         in: body
         description: Should Contact be marked as important
         schema: 
-          type: object
-          properties:
-            isImportant:
-              type: boolean  
+          $ref: '#/definitions/IsImportant'
         required: true
       responses:
         200:
@@ -232,7 +242,29 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Error'          
+            $ref: '#/definitions/Error'
+    get:
+      summary: Get current value of importance
+      parameters:
+        - name: id
+          in: path
+          type: string
+          format: uuid
+          description: ID of the contact to retrieve
+          required: true
+      responses:
+        200:
+          description: Object describing importance of the Contact
+          schema:
+            $ref: '#/definitions/IsImportant'
+        404:
+          description: Unable to find Contact entity
+          schema:
+            type: string
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
 
   /contacts/{id}/deputy:
     put:
@@ -291,6 +323,13 @@ paths:
 
 
 definitions:
+  IsImportant:
+    type: object
+    required:
+      - isImportant
+    properties:
+      isImportant:
+        type: boolean
   Notifee:
     type: object
     required:
