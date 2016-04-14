@@ -1,4 +1,5 @@
 # domofon-api
+[![Build Status](https://travis-ci.org/blstream/domofon-api.svg?branch=gh-pages)](https://travis-ci.org/blstream/domofon-api)
 
 API specification for http://www.meetup.com/codespacepl/events/230167486/ event.
 
