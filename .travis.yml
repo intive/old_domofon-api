@@ -1,5 +1,9 @@
 language: generic
 
+branches:
+  only:
+    - gh-pages
+
 before_script:
   - npm install -g swagger-cli
 script:
