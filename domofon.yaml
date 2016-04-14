@@ -93,7 +93,7 @@ paths:
         200:
           description: Server-Sent Events stream
           schema:
-            $ref: '#/definitions/SSEvent'
+            $ref: '#/definitions/Updated'
         default:
           description: Unexpected error
           schema:
@@ -139,7 +139,7 @@ paths:
           examples:
             text/plain: OK
             application/json:
-              status: OK            
+              status: OK
         404:
           description: Unable to find Contact entity
           schema:
@@ -147,7 +147,7 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Error'          
+            $ref: '#/definitions/Error'
 
 
   /contacts/{id}/notify:
@@ -157,7 +157,7 @@ paths:
         - name: id
           in: path
           type: string
-          format: uuid          
+          format: uuid
           description: ID of the contact to trigger notification for
           required: true
       responses:
@@ -168,7 +168,11 @@ paths:
           examples:
             text/plain: OK
             application/json:
-              status: OK            
+              status: OK
+        429:
+          description: Too many notification requests
+          schema:
+            $ref: '#/definitions/NotificationRetry'
         404:
           description: Unable to find Contact entity
           schema:
@@ -176,7 +180,7 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Error'          
+            $ref: '#/definitions/Error'
 
   /contacts/{id}/message:
     put:
@@ -199,16 +203,16 @@ paths:
           examples:
             text/plain: OK
             application/json:
-              status: OK            
+              status: OK
         404:
           description: Unable to find Contact entity
           schema:
             type: string
-            
+
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Error'          
+            $ref: '#/definitions/Error'
 
   /contacts/{id}/important:
     put:
@@ -223,7 +227,7 @@ paths:
       - name: isimportant
         in: body
         description: Should Contact be marked as important
-        schema: 
+        schema:
           $ref: '#/definitions/IsImportant'
         required: true
       responses:
@@ -234,7 +238,7 @@ paths:
           examples:
             text/plain: OK
             application/json:
-              status: OK            
+              status: OK
         404:
           description: Unable to find Contact entity
           schema:
@@ -273,7 +277,7 @@ paths:
         - name: id
           in: path
           type: string
-          format: uuid          
+          format: uuid
           description: ID of the contact to set custom Deputy
           required: true
         - name: deputy
@@ -289,7 +293,7 @@ paths:
           examples:
             text/plain: OK
             application/json:
-              status: OK            
+              status: OK
         404:
           description: Unable to find Contact entity
           schema:
@@ -300,7 +304,7 @@ paths:
         - name: id
           in: path
           type: string
-          format: uuid          
+          format: uuid
           description: ID of the Contact to remove custom Deputy
           required: true
       responses:
@@ -319,7 +323,7 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Error'          
+            $ref: '#/definitions/Error'
 
 
 definitions:
@@ -330,6 +334,17 @@ definitions:
     properties:
       isImportant:
         type: boolean
+  NotificationRetry:
+    type: object
+    required:
+      - message
+      - whenAllowed
+    properties:
+      message:
+        type: string
+      whenAllowed:
+        type: string
+        format: datetime
   Notifee:
     type: object
     required:
@@ -347,7 +362,7 @@ definitions:
         type: string
 
   ContactRequest:
-    type: object   
+    type: object
     required:
       - name
       - notifyEmail
@@ -397,15 +412,15 @@ definitions:
         format: date
       tillDate:
         type: string
-        format: date        
+        format: date
       isImportant:
         type: boolean
       message:
         type: string
       deputy:
         $ref: '#/definitions/Notifee'
-        
-  SSEvent:
+
+  Updated:
     type: object
     properties:
       updatedAt:
