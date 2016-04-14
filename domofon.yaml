@@ -1,4 +1,5 @@
 swagger: '2.0'
+#host: localhost:8080 # uncomment to run tests against your local server
 info:
   version: 0.2.0
   title: Domofon API
