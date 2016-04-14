@@ -1,9 +1,8 @@
 swagger: '2.0'
-#host: localhost:8080 # uncomment to run tests against your server
 info:
   version: 0.2.0
   title: Domofon API
-  description: Application developed as part of CodeSpace #1
+  description: Application developed as part of CodeSpace \#1
 basePath: / # there should be version here, but for simplicity lets skip it
 schemes:
   - http
@@ -54,7 +53,7 @@ paths:
     post:
       summary: Allow creation of new Contact entry
       description: "We are aware it should be client-side generated PUT, but for simplicity of implementation we decided to keep POST. Returned String is ID of created event as UUID."
-      responses:
+      responses:  
         200:
           description: Contact was created
           examples: 
@@ -186,8 +185,10 @@ paths:
   /contacts/{id}/message:
     put:
       summary: Change notification message which will be included in email
-      description: "It can contain few placeholders which will be expanded before sending:
-      TODO: put placeholders here
+      description: "It can contain few placeholders which will be expanded before sending: <br>
+      `{secret}` secret needed to update details for contact (useful for URLs) <br>
+      `{name}` display name of contact
+      
       "
       parameters:
         - name: id
