@@ -1,5 +1,4 @@
 swagger: '2.0'
-#host: localhost:8080 # uncomment to run tests against your local server
 info:
   version: 0.2.0
   title: Domofon API
@@ -188,8 +187,8 @@ paths:
       summary: Change notification message which will be included in email
       description: "It can contain few placeholders which will be expanded before sending: <br>
       `{secret}` secret needed to update details for contact (useful for URLs) <br>
-      `{name}` display name of contact
-      
+      `{name}` display name of contact <br>
+      `{id}` uuid of the contact
       "
       parameters:
         - name: id
@@ -197,6 +196,12 @@ paths:
           type: string
           format: uuid
           description: ID of the contact to change custom notification message
+          required: true
+        - name: message
+          in: body
+          schema: 
+            type: string
+          description: message to be sent in email notification
           required: true
       responses:
         200:
