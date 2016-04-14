@@ -108,7 +108,7 @@ paths:
           in: path
           type: string
           format: uuid
-          description: ID of the contact to retrieve
+          description: ID of the Contact to retrieve
           required: true
       responses:
         200:
@@ -130,7 +130,7 @@ paths:
         in: path
         type: string
         format: uuid
-        description: ID of the contact to remove
+        description: ID of the Contact to remove
         required: true
       responses:
         200:
@@ -159,7 +159,7 @@ paths:
           in: path
           type: string
           format: uuid
-          description: ID of the contact to trigger notification for
+          description: ID of the Contact to trigger notification for
           required: true
       responses:
         200:
@@ -187,15 +187,15 @@ paths:
     put:
       summary: Change notification message which will be included in email
       description: "It can contain few placeholders which will be expanded before sending: <br>
-      `{secret}` secret needed to update details for contact (useful for URLs) <br>
-      `{name}` display name of contact
+      `{secret}` secret needed to update details for Contact (useful for URLs) <br>
+      `{name}` display name of Contact
       "
       parameters:
         - name: id
           in: path
           type: string
           format: uuid
-          description: ID of the contact to change custom notification message
+          description: ID of the Contact to change custom notification message
           required: true
       responses:
         200:
@@ -223,7 +223,7 @@ paths:
           in: path
           type: string
           format: uuid
-          description: ID of the contact to change custom notification message
+          description: ID of the Contact to read message
           required: true
       responses:
         200:
@@ -242,7 +242,7 @@ paths:
 
   /contacts/{id}/important:
     put:
-      summary: Change importance of the contact
+      summary: Change importance of the Contact
       parameters:
       - name: id
         in: path
@@ -280,7 +280,7 @@ paths:
           in: path
           type: string
           format: uuid
-          description: ID of the contact to retrieve
+          description: ID of the Contact to retrieve
           required: true
       responses:
         200:
@@ -304,7 +304,7 @@ paths:
           in: path
           type: string
           format: uuid
-          description: ID of the contact to set custom Deputy
+          description: ID of the Contact to set custom Deputy
           required: true
         - name: deputy
           in: body
