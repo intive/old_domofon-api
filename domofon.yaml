@@ -189,7 +189,6 @@ paths:
       description: "It can contain few placeholders which will be expanded before sending: <br>
       `{secret}` secret needed to update details for contact (useful for URLs) <br>
       `{name}` display name of contact
-      
       "
       parameters:
         - name: id
@@ -207,6 +206,30 @@ paths:
             text/plain: OK
             application/json:
               status: OK
+        404:
+          description: Unable to find Contact entity
+          schema:
+            type: string
+
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+    get:
+      summary: Retrieve messages set for Contact
+      description: User can customize his notification message, current value could be read using that endpoint
+      parameters:
+        - name: id
+          in: path
+          type: string
+          format: uuid
+          description: ID of the contact to change custom notification message
+          required: true
+      responses:
+        200:
+          description: Current notification message or default one if not set
+          schema:
+            type: string
         404:
           description: Unable to find Contact entity
           schema:
@@ -397,6 +420,7 @@ definitions:
       - phone
       - adminEmail
       - isImportant
+      - fromDate
     properties:
       id:
         type: string
@@ -418,8 +442,6 @@ definitions:
         format: date
       isImportant:
         type: boolean
-      message:
-        type: string
       deputy:
         $ref: '#/definitions/Notifee'
 
