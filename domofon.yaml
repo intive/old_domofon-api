@@ -351,6 +351,141 @@ paths:
           schema:
             $ref: '#/definitions/Error'
 
+  /categories:
+    get:
+      summary: Returns list of Category entries
+      description: Returned data is JSON array with entries of CategoryResponse
+      responses:
+        200:
+          description: Return list of Category entries
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/CategoryResponse'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'              
+
+    post:
+      summary: Allow creation of new Category
+      description: "We are aware it should be client-side generated PUT, but for simplicity of implementation we decided to keep POST. Returned String is ID of created event as UUID."
+      responses:  
+        200:
+          description: Category was created
+          examples: 
+            text/plain: "d41b57fb-30a4-44b8-99e2-9cb9f9058838"
+            application/json: 
+              id: "d41b57fb-30a4-44b8-99e2-9cb9f9058838"
+          schema:
+            type: string
+            format: uuid
+        422: 
+          description: Required fields were missing or invalid
+          examples:
+            application/json:
+              message: MissingFields
+              fields: ['name', 'description', 'isBatch', 'message']
+          schema:
+            $ref: '#/definitions/Error'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+      parameters:
+       - name: category
+         in: body
+         description: Category to add
+         required: true
+         schema:
+          $ref: '#/definitions/CategoryRequest'
+
+  /categories/{id}:
+    get:
+      summary: Retrieve details of Category
+      parameters:
+        - name: id
+          in: path
+          type: string
+          format: uuid
+          description: ID of the Category to retrieve
+          required: true
+      responses:
+        200:
+          description: Cateogry was found and could be returned
+          schema:
+            $ref: '#/definitions/CategoryResponse'
+        404:
+          description: Unable to find Category entity
+          schema:
+            type: string
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+    delete:
+      summary: Remove Category entity
+      parameters:
+      - name: id
+        in: path
+        type: string
+        format: uuid
+        description: ID of the Category to remove
+        required: true
+      responses:
+        200:
+          description: Category removed
+          schema:
+            type: string
+          examples:
+            text/plain: OK
+            application/json:
+              status: OK
+        404:
+          description: Unable to find Category entity
+          schema:
+            type: string
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+
+
+  /categories/{id}/notify:
+    post:
+      summary: Send notifications to Category, allowed only if isBatch = true
+      parameters:
+        - name: id
+          in: path
+          type: string
+          format: uuid
+          description: ID of the Contact to trigger notification for
+          required: true
+      responses:
+        200:
+          description: Notification was sent
+          schema:
+            type: string
+          examples:
+            text/plain: OK
+            application/json:
+              status: OK
+        429:
+          description: Too many notification requests
+          schema:
+            $ref: '#/definitions/NotificationRetry'
+        400:
+          description: Bad request, check if Category has isBatch = true
+          schema:
+            type: string
+        404:
+          description: Unable to find Contact entity
+          schema:
+            type: string
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
 
 definitions:
   IsImportant:
@@ -444,6 +579,9 @@ definitions:
         type: boolean
       deputy:
         $ref: '#/definitions/Notifee'
+      nextNotificationAllowedAt:
+        type: string
+        format: datetime
 
   Updated:
     type: object
@@ -451,6 +589,50 @@ definitions:
       updatedAt:
         type: string
         format: date-time
+        
+  CategoryRequest:
+    type: object
+    required:
+     - name
+     - description
+     - isBatch
+     - message
+    properties: 
+      name: 
+        type: string
+      description: 
+        type: string
+      isBatch:
+        type: boolean
+      message: 
+        type: string
+        format: text
+
+  CategoryResponse:
+    type: object
+    required:
+      - id
+      - name
+      - description
+      - isBatch
+      - messages
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+      description:
+        type: string
+      isBatch:
+        type: boolean
+      messages:
+        type: array
+        items:
+          type: string
+      nextNotificationAllowedAt:
+        type: string
+        format: datetime
+        
   Error:
     type: object
     properties:
@@ -461,3 +643,4 @@ definitions:
         type: string
       fields:
         type: string        
+     
