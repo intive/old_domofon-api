@@ -61,15 +61,15 @@ paths:
             text/plain: "d41b57fb-30a4-44b8-99e2-9cb9f9058838"
             application/json:
               id: "d41b57fb-30a4-44b8-99e2-9cb9f9058838"
+              secret: "123457fb-30a4-44b8-99e2-9cb9f9058838"
           schema:
-            type: string
-            format: uuid
+            $ref: '#/definitions/EntityCreatedWithSecret'
         422:
           description: Required fields were missing or invalid
           examples:
             application/json:
               message: MissingFields
-              fields: ['name', 'notifyEmail', 'phone']
+              fields: ['name', 'notifyEmail']
           schema:
             $ref: '#/definitions/Error'
         default:
@@ -378,8 +378,7 @@ paths:
             application/json:
               id: "d41b57fb-30a4-44b8-99e2-9cb9f9058838"
           schema:
-            type: string
-            format: uuid
+            $ref: '#/definitions/EntityCreated'
         422:
           description: Required fields were missing or invalid
           examples:
@@ -488,6 +487,29 @@ paths:
             $ref: '#/definitions/Error'
 
 definitions:
+
+  EntityCreated:
+    type: object
+    required:
+      - id
+    properties:
+      id:
+        type: string
+        format: uuid
+
+  EntityCreatedWithSecret:
+    type: object
+    required:
+      - id
+      - secret
+    properties:
+      id:
+        type: string
+        format: uuid
+      secret:
+        type: string
+        format: uuid
+
   IsImportant:
     type: object
     required:
@@ -528,7 +550,6 @@ definitions:
       - name
       - category
       - notifyEmail
-      - phone
     properties:
       name:
         type: string
@@ -557,7 +578,6 @@ definitions:
       - name
       - category
       - notifyEmail
-      - phone
       - adminEmail
       - isImportant
       - fromDate
@@ -645,6 +665,8 @@ definitions:
         
   Error:
     type: object
+    required:
+      - message
     properties:
       code:
         type: integer
@@ -652,5 +674,7 @@ definitions:
       message:
         type: string
       fields:
-        type: string        
+        type: array
+        items:
+          type: string
      
