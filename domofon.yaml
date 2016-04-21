@@ -33,11 +33,11 @@ paths:
       summary: Returns list of Contact entries
       description: Returned data is JSON array with entries of ContactResponse
       parameters:
-        - name: archive
+        - name: category
           in: query
-          description: Should return Contact objects which are archived
-          type: boolean
-          default: false
+          description: Filter contacts by category
+          type: string
+          format: uuid
           required: false
       responses:
         200:
@@ -49,22 +49,22 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Error'              
+            $ref: '#/definitions/Error'
 
     post:
       summary: Allow creation of new Contact entry
       description: "We are aware it should be client-side generated PUT, but for simplicity of implementation we decided to keep POST. Returned String is ID of created event as UUID."
-      responses:  
+      responses:
         200:
           description: Contact was created
-          examples: 
+          examples:
             text/plain: "d41b57fb-30a4-44b8-99e2-9cb9f9058838"
-            application/json: 
+            application/json:
               id: "d41b57fb-30a4-44b8-99e2-9cb9f9058838"
           schema:
             type: string
             format: uuid
-        422: 
+        422:
           description: Required fields were missing or invalid
           examples:
             application/json:
@@ -84,7 +84,7 @@ paths:
          schema:
           $ref: '#/definitions/ContactRequest'
 
-            
+
   /contacts/sse:
     get:
       produces: ["text/event-stream"]
@@ -365,22 +365,22 @@ paths:
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Error'              
+            $ref: '#/definitions/Error'
 
     post:
       summary: Allow creation of new Category
       description: "We are aware it should be client-side generated PUT, but for simplicity of implementation we decided to keep POST. Returned String is ID of created event as UUID."
-      responses:  
+      responses:
         200:
           description: Category was created
-          examples: 
+          examples:
             text/plain: "d41b57fb-30a4-44b8-99e2-9cb9f9058838"
-            application/json: 
+            application/json:
               id: "d41b57fb-30a4-44b8-99e2-9cb9f9058838"
           schema:
             type: string
             format: uuid
-        422: 
+        422:
           description: Required fields were missing or invalid
           examples:
             application/json:
@@ -526,11 +526,15 @@ definitions:
     type: object
     required:
       - name
+      - category
       - notifyEmail
       - phone
     properties:
       name:
         type: string
+      category:
+        type: string
+        format: string
       company:
         type: string
       notifyEmail:
@@ -551,6 +555,7 @@ definitions:
     required:
       - id
       - name
+      - category
       - notifyEmail
       - phone
       - adminEmail
@@ -559,8 +564,12 @@ definitions:
     properties:
       id:
         type: string
+        format: uuid
       name:
         type: string
+      category:
+        type: string
+        format: uuid
       company:
         type: string
       notifyEmail:
@@ -619,6 +628,7 @@ definitions:
     properties:
       id:
         type: string
+        format: uuid
       name:
         type: string
       description:
