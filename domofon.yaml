@@ -384,7 +384,7 @@ paths:
           examples:
             application/json:
               message: MissingFields
-              fields: ['name', 'description', 'isBatch', 'message']
+              fields: ['name', 'description', 'message']
           schema:
             $ref: '#/definitions/Error'
         default:
@@ -452,7 +452,7 @@ paths:
 
   /categories/{id}/notify:
     post:
-      summary: Send notifications to Category, allowed only if isBatch = true
+      summary: Send notifications to Category, allowed only if isIndividual = false
       parameters:
         - name: id
           in: path
@@ -474,7 +474,7 @@ paths:
           schema:
             $ref: '#/definitions/NotificationRetry'
         400:
-          description: Bad request, check if Category has isBatch = true
+          description: Bad request, check if Category has isIndividual = false, otherwise it is not allowed
           schema:
             type: string
         404:
@@ -624,15 +624,15 @@ definitions:
     required:
      - name
      - description
-     - isBatch
      - message
     properties: 
       name: 
         type: string
       description: 
         type: string
-      isBatch:
+      isIndividual:
         type: boolean
+        default: false
       message: 
         type: string
         format: text
@@ -643,7 +643,7 @@ definitions:
       - id
       - name
       - description
-      - isBatch
+      - isIndividual
       - messages
     properties:
       id:
@@ -653,7 +653,7 @@ definitions:
         type: string
       description:
         type: string
-      isBatch:
+      isIndividual:
         type: boolean
       messages:
         type: array
