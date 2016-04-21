@@ -3,6 +3,8 @@
 
 API specification for http://www.meetup.com/codespacepl/events/230167486/ event.
 
+To open it in Swagger editor: http://editor.swagger.io/#/?import=https://raw.githubusercontent.com/blstream/domofon-api/gh-pages/domofon.yaml
+
 Check it in Swagger UI: http://blstream.github.io/domofon-api/
 
 ## Mock server
