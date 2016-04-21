@@ -22,7 +22,7 @@ securityDefinitions:
   Basic:
     type: basic
     description: Provides admin login and password.
-    
+
 paths:
   /domofon.yaml:
     get:
@@ -162,7 +162,7 @@ paths:
           schema:
             $ref: '#/definitions/Error'
         401:
-          description: Missing or wrong credentials 
+          description: Missing or wrong credentials
       security:
       - Bearer: []
 
@@ -232,7 +232,7 @@ paths:
           schema:
             $ref: '#/definitions/Error'
         401:
-          description: Missing or wrong credentials 
+          description: Missing or wrong credentials
       security:
       - Bearer: []
     get:
@@ -316,10 +316,10 @@ paths:
           schema:
             $ref: '#/definitions/Error'
         401:
-          description: Missing or wrong credentials 
+          description: Missing or wrong credentials
       security:
       - Bearer: []
-      
+
   /contacts/{id}/deputy:
     put:
       summary: Change deputy for Contact
@@ -349,10 +349,10 @@ paths:
           schema:
             type: string
         401:
-          description: Missing or wrong credentials 
+          description: Missing or wrong credentials
       security:
       - Bearer: []
-      
+
     delete:
       summary: Remove deputy
       parameters:
@@ -380,9 +380,9 @@ paths:
           schema:
             $ref: '#/definitions/Error'
         401:
-          description: Missing or wrong credentials 
+          description: Missing or wrong credentials
       security:
-      - Bearer: []            
+      - Bearer: []
 
   /categories:
     get:
@@ -425,9 +425,9 @@ paths:
           schema:
             $ref: '#/definitions/Error'
         401:
-          description: Missing or wrong credentials 
+          description: Missing or wrong credentials
       security:
-      - Bearer: []            
+      - Bearer: []
       parameters:
        - name: category
          in: body
@@ -486,9 +486,9 @@ paths:
           schema:
             $ref: '#/definitions/Error'
         401:
-          description: Missing or wrong credentials 
+          description: Missing or wrong credentials
       security:
-      - Bearer: []            
+      - Bearer: []
 
 
   /categories/{id}/notify:
@@ -526,7 +526,7 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
-            
+
   /categories/{id}/messages:
     get:
       summary: Get available messages for Category
@@ -553,7 +553,7 @@ paths:
           format: uuid
           description: ID of the Category
           required: true
-          
+
         - name: message
           description: Content of the Message to be added
           in: body
@@ -573,7 +573,7 @@ paths:
         401:
           description: Missing or wrong admin token
       security:
-      - Bearer: []                
+      - Bearer: []
   /categories/{id}/messages/{messageId}:
     delete:
       summary: Remove a Message for given Category.
@@ -607,7 +607,7 @@ paths:
         400:
           description: Tried to remove the only message for Category
       security:
-       - Bearer: []    
+       - Bearer: []
     put:
       summary: Update a Message for given Category
       parameters:
@@ -640,8 +640,9 @@ paths:
         401:
           description: Missing or wrong admin token
       security:
-       - Bearer: []    
-      
+       - Bearer: []
+
+
   /login:
     get:
       summary: Get an admin token for use in Bearer schema.
@@ -836,7 +837,7 @@ definitions:
       nextNotificationAllowedAt:
         type: string
         format: datetime
-      
+
   CategoryMessage:
     type: object
     required:
@@ -848,8 +849,8 @@ definitions:
         format: uuid
       message:
         type: string
-          
-        
+
+
   Error:
     type: object
     required:
@@ -864,4 +865,4 @@ definitions:
         type: array
         items:
           type: string
-     
+
