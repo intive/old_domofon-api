@@ -199,67 +199,6 @@ paths:
           schema:
             $ref: '#/definitions/Error'
 
-  /contacts/{id}/message:
-    put:
-      summary: Change notification message which will be included in email
-      description: "It can contain few placeholders which will be expanded before sending: <br>
-      `{secret}` secret needed to update details for Contact (useful for URLs) <br>
-      `{name}` display name of Contact
-      "
-      parameters:
-        - name: id
-          in: path
-          type: string
-          format: uuid
-          description: ID of the Contact to change custom notification message
-          required: true
-      responses:
-        200:
-          description: Message was altered
-          schema:
-            type: string
-          examples:
-            text/plain: OK
-            application/json:
-              status: OK
-        404:
-          description: Unable to find Contact entity
-          schema:
-            type: string
-
-        default:
-          description: Unexpected error
-          schema:
-            $ref: '#/definitions/Error'
-        401:
-          description: Missing or wrong credentials
-      security:
-      - Bearer: []
-    get:
-      summary: Retrieve messages set for Contact
-      description: User can customize his notification message, current value could be read using that endpoint
-      parameters:
-        - name: id
-          in: path
-          type: string
-          format: uuid
-          description: ID of the Contact to read message
-          required: true
-      responses:
-        200:
-          description: Current notification message or default one if not set
-          schema:
-            type: string
-        404:
-          description: Unable to find Contact entity
-          schema:
-            type: string
-
-        default:
-          description: Unexpected error
-          schema:
-            $ref: '#/definitions/Error'
-
   /contacts/{id}/important:
     put:
       summary: Change importance of the Contact
