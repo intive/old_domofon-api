@@ -47,7 +47,6 @@ paths:
           in: query
           description: Filter contacts by category
           type: string
-          format: uuid
           required: false
       responses:
         200:
@@ -117,7 +116,6 @@ paths:
         - name: id
           in: path
           type: string
-          format: uuid
           description: ID of the Contact to retrieve
           required: true
       responses:
@@ -139,7 +137,6 @@ paths:
       - name: id
         in: path
         type: string
-        format: uuid
         description: ID of the Contact to remove
         required: true
 
@@ -174,7 +171,6 @@ paths:
         - name: id
           in: path
           type: string
-          format: uuid
           description: ID of the Contact to trigger notification for
           required: true
       responses:
@@ -206,7 +202,6 @@ paths:
       - name: id
         in: path
         type: string
-        format: uuid
         description: ID of the Contact to change importance
         required: true
       - name: isimportant
@@ -238,7 +233,6 @@ paths:
         - name: id
           in: path
           type: string
-          format: uuid
           description: ID of the Contact to retrieve
           required: true
       responses:
@@ -266,7 +260,6 @@ paths:
         - name: id
           in: path
           type: string
-          format: uuid
           description: ID of the Contact to set custom Deputy
           required: true
         - name: deputy
@@ -298,7 +291,6 @@ paths:
         - name: id
           in: path
           type: string
-          format: uuid
           description: ID of the Contact to remove custom Deputy
           required: true
       responses:
@@ -382,7 +374,6 @@ paths:
         - name: id
           in: path
           type: string
-          format: uuid
           description: ID of the Category to retrieve
           required: true
       responses:
@@ -404,7 +395,6 @@ paths:
       - name: id
         in: path
         type: string
-        format: uuid
         description: ID of the Category to remove
         required: true
       responses:
@@ -437,7 +427,6 @@ paths:
         - name: id
           in: path
           type: string
-          format: uuid
           description: ID of the Contact to trigger notification for
           required: true
       responses:
@@ -473,7 +462,6 @@ paths:
         - name: id
           in: path
           type: string
-          format: uuid
           description: ID of the Category
           required: true
       responses:
@@ -489,7 +477,6 @@ paths:
         - name: id
           in: path
           type: string
-          format: uuid
           description: ID of the Category
           required: true
 
@@ -521,13 +508,11 @@ paths:
         - name: id
           in: path
           type: string
-          format: uuid
           description: ID of the Category
           required: true
         - name: messageId
           in: path
           type: string
-          format: uuid
           description: ID of the Message to delete
           required: true
       responses:
@@ -553,13 +538,11 @@ paths:
         - name: id
           in: path
           type: string
-          format: uuid
           description: ID of the Category
           required: true
         - name: messageId
           in: path
           type: string
-          format: uuid
           description: ID of the Message to delete
           required: true
         - name: message
@@ -609,7 +592,6 @@ definitions:
     properties:
       id:
         type: string
-        format: uuid
 
   EntityCreatedWithSecret:
     type: object
@@ -619,10 +601,8 @@ definitions:
     properties:
       id:
         type: string
-        format: uuid
       secret:
         type: string
-        format: uuid
 
   IsImportant:
     type: object
@@ -698,12 +678,10 @@ definitions:
     properties:
       id:
         type: string
-        format: uuid
       name:
         type: string
       category:
         type: string
-        format: uuid
       company:
         type: string
       notifyEmail:
@@ -762,7 +740,6 @@ definitions:
     properties:
       id:
         type: string
-        format: uuid
       name:
         type: string
       description:
@@ -785,7 +762,6 @@ definitions:
     properties:
       id:
         type: string
-        format: uuid
       message:
         type: string
 
